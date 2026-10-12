@@ -10,7 +10,13 @@ test('shows the community homepage without browser errors',async({page})=>{
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await expect.poll(()=>page.locator('.hero-card img').evaluateAll(imgs=>imgs.every(img=>(img as HTMLImageElement).naturalWidth>0))).toBe(true);
   await expect(page.locator('.hero-card img')).toHaveCount(3);
-  await expect(page.locator('.hero-visual-caption')).toHaveAttribute('href','https://en.onepiece-cardgame.com/cardlist/?series=569117');
+  await expect(page.locator('.hero-card')).toHaveCount(3);
+  await expect(page.locator('.hero-card').first()).toHaveAttribute('href','https://en.onepiece-cardgame.com/cardlist/?series=569117');
+  await expect(page.locator('.hero-visual-caption')).toHaveCount(0);
+  await expect(page.getByRole('region',{name:'When and where'})).toContainText('Vilnius');
+  await expect(page.getByRole('region',{name:'When and where'})).toContainText('Konstitucijos pr. 12');
+  await expect(page.getByRole('region',{name:'When and where'})).toContainText('Kaunas');
+  await expect(page.getByRole('region',{name:'When and where'})).toContainText('Radvilėnų pl. 1B');
   await expect(page.locator(`a[href="https://discord.gg/rSYnAtQ8Zy"]`)).toHaveCount(2);
   await expect(page.getByText('The literal and graphical information presented on this site about One Piece Card',{exact:false})).toBeVisible();
   expect(errors).toEqual([]);
