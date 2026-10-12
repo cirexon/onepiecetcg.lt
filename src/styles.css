@@ -71,12 +71,24 @@ th{font-size:11px}.cell-code{font-size:10px}.login-card>small{font-size:12px}
 .hero-locations{max-width:430px;margin-top:30px;padding:15px 17px 16px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 .hero-locations-heading{display:flex;align-items:center;gap:11px}
 .hero-locations-heading>span{width:34px;height:34px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;background:#1e696a35;color:#43aaa2}
-.hero-locations-heading strong{display:block;font-size:13px;font-weight:650}
-.hero-locations-heading small{display:block;margin-top:2px;color:var(--muted);font-size:11px}
-.hero-location-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+.hero-locations-heading strong{display:block;font-size:14px;font-weight:650}
+.hero-locations-heading small{display:block;margin-top:2px;color:var(--muted);font-size:12px}
+.hero-location-grid{display:grid;grid-template-columns:.9fr 1.2fr;gap:16px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
 .hero-location-grid>div+div{padding-left:16px;border-left:1px solid var(--line)}
-.hero-location-grid strong{display:block;margin-bottom:5px;color:var(--text);font-size:11px}
-.hero-location-grid span,.hero-location-grid address{display:block;color:var(--muted);font-size:11px;line-height:1.55}
+.hero-location-grid strong{display:block;margin-bottom:5px;color:var(--text);font-size:12px}
+.hero-location-grid span,.hero-location-grid address{display:block;color:var(--muted);font-size:12px;line-height:1.5}
 .hero-location-grid address{margin-top:2px;font-style:normal;color:var(--text)}
 @media(max-width:700px){.hero-locations{margin-top:24px;max-width:100%}}
 @media(max-width:360px){.hero-location-grid{grid-template-columns:1fr}.hero-location-grid>div+div{padding-left:0;padding-top:12px;border-left:0;border-top:1px solid var(--line)}}
+
+/* Keep supporting copy readable while preserving the compact card layout. */
+.eyebrow{font-size:11px}
+.hero .eyebrow,.join-section .eyebrow{font-size:10px}
+.stats-strip span{font-size:12px}
+.stats-strip .strip-message{font-size:10px;line-height:1.4}
+.map-coordinate,.don-stamp small{font-size:10px}
+.event-card-top .eyebrow,.pill,.result-info>.eyebrow,.card-code,.leader-numbers small,.leader-stat-name .eyebrow,.color-badge,.numeric-stat span,.cell-code{font-size:11px}
+th{font-size:12px}
+.site-footer .brand-sub{font-size:9px}
+@media(max-width:700px){.demo-banner,.stats-strip span,.section-heading>.text-link,.profile-stats span,.manage-events .button{font-size:11px}.hero .eyebrow{font-size:10px}}
+@media(max-width:360px){.brand-sub{font-size:8px}.lang-switch{font-size:10px}}
