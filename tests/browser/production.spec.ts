@@ -25,6 +25,7 @@ test.describe('deployed release', () => {
     expect(html.headers()['content-security-policy']).toContain("script-src 'self' https://apis.google.com");
     expect(html.headers()['content-security-policy']).not.toContain("'unsafe-inline'");
     expect(html.headers()['content-security-policy']).toContain('https://www.google.com/recaptcha/');
+    expect(html.headers()['content-security-policy']).toContain("img-src 'self'");
     expect(html.headers()['strict-transport-security']).toContain('includeSubDomains');
     expect(html.headers()['x-content-type-options']).toBe('nosniff');
     expect(html.headers()['x-frame-options']).toBe('DENY');

@@ -32,3 +32,38 @@ a,button{transition:border-color .18s}
 @media(max-width:900px){.hero-card{height:auto}}
 @media(max-width:700px){.hero-card{height:auto}}
 @media(max-width:360px){.header-inner{padding:0 12px;gap:6px}.header-tools{gap:3px}.brand{font-size:12px;gap:5px}.brand>svg{width:20px}.brand-sub{font-size:6px;letter-spacing:1.2px}.lang-switch{font-size:9px;gap:3px}.signin{font-size:0;width:32px;height:32px;padding:6px;gap:0}.theme-switch,.mobile-menu{padding:3px}.hero{grid-template-columns:minmax(0,1fr)}.hero-copy,.hero-visual{min-width:0}.hero h1{font-size:50px}.hero-actions{flex-direction:column;align-items:flex-start}.stats-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stats-strip>div{min-width:0;flex-wrap:wrap}.stats-strip span{overflow-wrap:anywhere}}
+
+/* Official preview artwork, community links, and readability polish. */
+.discord-header-link,.footer-discord,.discord-login-link{color:#8b9dff}
+.discord-header-link:hover,.footer-discord:hover,.discord-login-link:hover{color:#aeb8ff}
+:root[data-theme=light] .discord-header-link,:root[data-theme=light] .footer-discord,:root[data-theme=light] .discord-login-link{color:#49539b}
+:root[data-theme=light] .discord-header-link:hover,:root[data-theme=light] .footer-discord:hover,:root[data-theme=light] .discord-login-link:hover{color:#323b7c}
+.discord-header-link{border-left:1px solid var(--line);padding-left:16px}
+.official-card-image{background:#0a1118}
+.hero-card:focus-visible{outline-offset:7px}
+.hero-visual-caption{z-index:6;padding:7px 10px;border-radius:999px;background:color-mix(in srgb,var(--bg) 85%,transparent);border:1px solid var(--line);font-size:10px}
+.hero-visual-caption:hover{color:var(--gold);border-color:var(--gold)}
+.site-footer{display:block;padding:0;border-top:1px solid var(--line)}
+.footer-main{display:flex;justify-content:space-between;padding-top:31px;padding-bottom:25px;gap:30px}
+.site-footer p{font-size:12px;line-height:1.65}
+.footer-right>div{font-size:12px;align-items:center}
+.legal-disclaimer{border-top:1px solid var(--line);padding-top:18px;padding-bottom:28px}
+.legal-disclaimer p{max-width:980px;margin:0;color:var(--muted);font-size:11px;line-height:1.75}
+.discord-login-link{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;font-weight:600}
+.sample-note{font-size:12px}
+.hero-community,.hero-community strong{font-size:12px}.hero-community small{font-size:11px}
+.event-card-top .eyebrow,.pill{font-size:10px}.event-body p,.event-bottom{font-size:11px}
+.result-info>.eyebrow{font-size:10px}.winner small,.result-info>.text-link{font-size:11px}
+.card-code,.leader-numbers small,.leader-stat-name .eyebrow{font-size:10px}.color-badge,.numeric-stat span{font-size:10px}
+.join-section .eyebrow{font-size:10px}.join-section p{font-size:12px}.join-section .primary-link{font-size:11px}
+th{font-size:11px}.cell-code{font-size:10px}.login-card>small{font-size:12px}
+.event-card,.result-card,.leader-card,.news-card,.community-guide{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.event-card:hover,.result-card:hover,.leader-card:hover,.news-card:hover,.community-guide:hover{transform:translateY(-4px);box-shadow:0 16px 34px #0003}
+.hero-copy{animation:rise-in .7s ease both}.hero-visual{animation:rise-in .8s .12s ease both}
+.hero-compass{animation:compass-turn 32s linear infinite}.hero-star{animation:star-pulse 3.2s ease-in-out infinite}.status-dot{animation:signal-pulse 2.4s ease-in-out infinite}
+@keyframes rise-in{from{transform:translateY(18px)}to{transform:translateY(0)}}
+@keyframes compass-turn{from{transform:rotate(12deg)}to{transform:rotate(372deg)}}
+@keyframes star-pulse{0%,100%{opacity:.55;transform:scale(.92) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(12deg)}}
+@keyframes signal-pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 30%,transparent)}50%{box-shadow:0 0 0 6px transparent}}
+@media(max-width:700px){.discord-header-link{padding:4px 7px;border-left:0}.footer-main{flex-direction:column;gap:20px;padding-top:25px}.footer-right{text-align:left}.footer-right>div{justify-content:flex-start;flex-wrap:wrap;gap:17px}.site-footer p{font-size:11px}.legal-disclaimer{padding-top:16px;padding-bottom:24px}.legal-disclaimer p{font-size:11px}.hero-visual-caption{font-size:9px}.sample-note{font-size:11px}.event-body p,.event-bottom{font-size:11px}.join-section .eyebrow{font-size:10px}.login-card>small{font-size:11px}}
+@media(max-width:360px){.discord-header-link{width:28px;height:28px;padding:4px}.discord-header-link svg{width:17px}.header-tools{gap:1px}}
