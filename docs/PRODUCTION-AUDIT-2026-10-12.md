@@ -60,10 +60,10 @@ Generated scanner and Lighthouse artifacts are kept under ignored `.tools/`; dur
 | SEC-13 | BLOCKED | Firebase-managed session code and logout exist, but logout, protected-data removal, and session invalidation were not exercised in a live authenticated browser during this audit. |
 | SEC-14 | PASS | All writes use authenticated Firebase SDK calls and Firestore rules; the architecture exposes no separate state-changing HTTP endpoint. |
 | SEC-15 | BLOCKED | Google Cloud API-key application/API restrictions were not evidenced from the Credentials console. |
-| SEC-16 | FAIL | App Check is not enforced and no quota alert with a tested response threshold exists. |
+| SEC-16 | FAIL | A domain-restricted reCAPTCHA Enterprise provider, seven-day TTL, client integration, and Firestore monitoring mode are configured; enforcement awaits valid-domain deployment and verified metrics, and no tested quota notification exists. |
 | SEC-17 | PASS | Expected Firebase failures are mapped to safe localized messages; live tests found no raw exception or provider diagnostic in the UI. |
 | SEC-18 | BLOCKED | Production log viewers, configured retention, redaction policy, and a sampled-log review have not been recorded. |
-| SEC-19 | BLOCKED | An OWASP ZAP baseline scan was not available or run against this release. |
+| SEC-19 | BLOCKED | OWASP ZAP 2.17.0 found no high-risk alert and one medium CSP alert; the source fix is prepared, but deployment and an official-domain rescan are still required. See [SECURITY-SCAN-2026-10-12.md](SECURITY-SCAN-2026-10-12.md). |
 | SEC-20 | PASS | External new-tab links use `noreferrer`; browser tests and the site-wide referrer policy verify opener protection. |
 | SEC-21 | PASS | Architecture, routes, dependencies, and [DATA-GOVERNANCE.md](DATA-GOVERNANCE.md) confirm that uploads, payments, messaging, analytics, and password authentication are absent. |
 | SEC-22 | BLOCKED | [SECURITY.md](../SECURITY.md) names an owner and response targets, but the private vulnerability-intake path has not been test-fired. |
@@ -85,7 +85,7 @@ Generated scanner and Lighthouse artifacts are kept under ignored `.tools/`; dur
 | DOC-11 | N/A | No non-essential storage or tracking exists; reviewed by Codex on 2026-10-12 and must be reopened before adding analytics, embeds, advertising, or session replay. |
 | DOC-12 | BLOCKED | The owner has not approved the minors, public-name, and guardian process. |
 | DOC-13 | BLOCKED | [INCIDENT-RESPONSE.md](INCIDENT-RESPONSE.md) defines the 72-hour workflow, but neither required tabletop scenario has been completed. |
-| DOC-14 | BLOCKED | Hosting rollback is documented; Firestore export, protected backup storage, and a restore drill are missing. |
+| DOC-14 | BLOCKED | Hosting rollback and a local encrypted Spark-compatible Firestore backup/restore command are documented; an isolated restore drill and retained evidence are still required. |
 | DOC-15 | BLOCKED | Public, dated community terms covering acceptable use, disputes, organiser duties, and suspension are absent. |
 | DOC-16 | BLOCKED | Official card artwork was removed and the [ASSET-REGISTER.md](ASSET-REGISTER.md) is present, but fan-site names/branding and takedown details need owner/legal review. |
 | DOC-17 | PASS | The release includes generated notices for 98 production packages and no known incompatible production license. |

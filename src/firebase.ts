@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { collection, doc, getDoc, getDocs, getFirestore, limit, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore';
 import type { Account, News, Player, SiteData, Tournament } from './types';
@@ -6,6 +7,9 @@ import { validateTournament } from './stats';
 const config = { apiKey: import.meta.env.VITE_FIREBASE_API_KEY, authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN, projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID, appId: import.meta.env.VITE_FIREBASE_APP_ID };
 export const configured = Object.values(config).every(Boolean);
 const app = configured ? initializeApp(config) : null;
+const appCheckKey = import.meta.env.VITE_FIREBASE_APPCHECK_SITE_KEY;
+const productionBrowser = !['localhost', '127.0.0.1'].includes(window.location.hostname);
+if (app && appCheckKey && productionBrowser) initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(appCheckKey), isTokenAutoRefreshEnabled: true });
 export const auth = app ? getAuth(app) : null;
 export const db = app ? getFirestore(app) : null;
 const publicAuthCodes = new Set(['auth/configuration-not-found','auth/operation-not-allowed','auth/unauthorized-domain','auth/popup-closed-by-user','auth/cancelled-popup-request']);

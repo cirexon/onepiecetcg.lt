@@ -19,11 +19,24 @@ If a release harms availability, access control, privacy, or data integrity, sto
 
 ## Firestore recovery
 
-Spark does not provide a completed project backup procedure in this repository. Before real participant data is accepted, select and document an export method, encrypted storage location, frequency, retention, access list, and deletion schedule; then restore into a separate test project and verify document counts and application behavior. Until that drill exists, DOC-14 remains blocked.
+The repository includes a Spark-compatible encrypted backup tool that uses the Firestore REST API and the operator's existing Firebase CLI login. It recursively includes every top-level collection and nested subcollection, including private `accounts`, roles, tournaments, and results. Backup files are ignored by Git.
+
+```sh
+npm run backup:firestore
+npm run backup:verify -- .backups/FILENAME.json.enc
+npm run backup:restore -- .backups/FILENAME.json.enc
+npm run backup:restore -- .backups/FILENAME.json.enc --apply
+```
+
+The first command prompts twice for a passphrase of at least 12 characters without echoing it. Store that passphrase in the owner's password manager and copy the encrypted file to owner-controlled storage. The restore command is a dry run unless `--apply` is supplied. Restore upserts documents and deliberately does not delete documents absent from the backup.
+
+Create a backup before each data or rules migration and at least monthly while real data exists. Keep three monthly copies, limit access to the Owner and named recovery maintainer, and securely delete expired copies. Before accepting real participant data, restore a copy into a separate Firebase test project or an isolated approved recovery environment, compare document counts, test public/private access, and record the date and operator. Until that drill is recorded, DOC-14 remains blocked.
 
 ## Quota and outage response
 
 - Review Firebase usage for Firestore reads/writes, Authentication, and Hosting transfer at least weekly during launch and after traffic spikes.
+- Review Firebase **App Check → APIs** and Google Cloud reCAPTCHA metrics weekly. The production key is restricted to the apex, `www`, and Firebase Hosting domains; its seven-day token TTL reduces assessments. Keep the project without a billing account so the 10,000-assessment monthly allowance cannot create charges.
+- App Check starts in `UNENFORCED` monitoring mode. After the custom-domain release has produced representative traffic and nearly all legitimate requests are verified, test sign-in and every public/admin data path, then enable Firestore enforcement. Record the metrics window and rollback owner. If verified traffic falls or legitimate users are blocked, return Firestore to monitoring mode immediately.
 - If quota is near its threshold, pause organiser writes, investigate abnormal clients, tighten rules or App Check, and communicate degraded functionality.
 - If Hosting is unavailable, confirm Firebase status, preserve the current release ID, and avoid repeated deployments until the cause is understood.
 - If Firestore fails, the public shell remains available; verify the user-facing error and retry path, then restore service or roll back the relevant rules/data change.

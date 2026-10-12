@@ -12,6 +12,9 @@
     "test:rules": "firebase emulators:exec --only firestore --project demo-onepiecetcg \"vitest run --config vitest.rules.config.ts\"",
     "test:browser": "playwright test",
     "test:a11y": "playwright test tests/browser/accessibility.spec.ts",
+    "backup:firestore": "node scripts/firestore-backup.mjs backup",
+    "backup:verify": "node scripts/firestore-backup.mjs verify",
+    "backup:restore": "node scripts/firestore-backup.mjs restore",
     "notices": "node scripts/generate-notices.mjs",
     "check:release": "npm run audit:prod && npm test && npm run build && npm run test:browser && npm run test:rules",
     "deploy": "npm run build && firebase deploy --only hosting,firestore"
