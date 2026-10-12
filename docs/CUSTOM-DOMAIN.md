@@ -8,6 +8,7 @@
 - DNS provider: Domenai.lt
 - Firebase Hosting bindings: created 2026-10-12
 - Firebase Authentication authorized domains: apex and `www` added 2026-10-12
+- Production Hosting release: `b4676b682fb593c9`, deployed 2026-10-12
 
 ## Required DNS changes
 

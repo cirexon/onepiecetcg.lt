@@ -5,18 +5,18 @@
 | Field | Evidence |
 | --- | --- |
 | Scope | React/Vite public site, Firebase Authentication integration, Firestore roles and data rules, organiser dashboard, Hosting configuration, bilingual themes, SEO, and release documentation |
-| Candidate source | Commit `48c1590` on `main` |
-| Candidate URL | `https://onepiecetcglt.web.app` |
-| Firebase Hosting release | `c3d60049d8d407fc` |
+| Candidate source | Commit `a661766` on `main` |
+| Candidate URL | `https://onepiecetcg.lt` |
+| Firebase Hosting release | `b4676b682fb593c9` |
 | Firestore ruleset | `285bfb4f-65d7-455f-b9bb-7683c18384ee` |
-| Test window | 2026-10-12 10:40–11:23 UTC |
+| Test window | 2026-10-12 10:40–12:20 UTC |
 | Technical tester | OpenAI Codex; automated and code-review evidence recorded below |
 | Required human reviewers | Content owner, privacy/legal reviewer, and accessibility reviewer remain unassigned |
 | Data migrations | None |
-| Rollback target | Hosting release `677b69d6b11948d0`; use the procedure in [OPERATIONS-RUNBOOK.md](OPERATIONS-RUNBOOK.md) |
+| Rollback target | Hosting release `c3d60049d8d407fc`; use the procedure in [OPERATIONS-RUNBOOK.md](OPERATIONS-RUNBOOK.md) |
 | Decision | **NO-GO for publishing real participant data or inviting organisers.** The deployed URL is suitable only as a technical preview until all applicable blocked and failed gates are resolved or formally accepted. |
 
-Status totals: **59 PASS**, **2 FAIL**, **36 BLOCKED**, **3 N/A** across 100 gates.
+Status totals: **60 PASS**, **2 FAIL**, **35 BLOCKED**, **3 N/A** across 100 gates.
 
 - **PASS:** the stated criterion has evidence for this release.
 - **FAIL:** a required product or operational control is absent.
@@ -28,7 +28,7 @@ Status totals: **59 PASS**, **2 FAIL**, **36 BLOCKED**, **3 N/A** across 100 gat
 | Check | Result |
 | --- | --- |
 | Fresh install | `npm ci` passed with the lockfile |
-| Unit tests | 13 passed |
+| Unit tests | 15 passed, including encrypted-backup integrity and wrong-passphrase rejection |
 | Firestore Rules Emulator | 29 passed, including role boundaries, IDOR, field bounds, private account data, and 128-result batches |
 | Local browser suite | 54 passed; six deployed-release cases skipped by design |
 | Live browser suite | Six passed on desktop/mobile against the final Hosting release |
@@ -37,7 +37,7 @@ Status totals: **59 PASS**, **2 FAIL**, **36 BLOCKED**, **3 N/A** across 100 gat
 | Secret scan | Gitleaks scanned committed history with zero findings; ignored local configuration and build output were separately excluded from Git |
 | License notices | Notices generated for 98 production packages in [THIRD_PARTY_NOTICES.txt](../public/THIRD_PARTY_NOTICES.txt) |
 | Lighthouse | Performance 93, Accessibility 100, Best Practices 100, SEO 100; FCP 2.6 s, LCP 2.6 s, TBT 0 ms, CLS 0 |
-| Production build | Passed; initial compressed JavaScript is approximately 258 kB and the 3.03 kB organiser module loads separately |
+| Production build | Passed; initial compressed JavaScript is approximately 263 kB and the 3.02 kB organiser module loads separately |
 
 Generated scanner and Lighthouse artifacts are kept under ignored `.tools/`; durable evidence is this release record, the test source, and the Git history.
 
@@ -60,10 +60,10 @@ Generated scanner and Lighthouse artifacts are kept under ignored `.tools/`; dur
 | SEC-13 | BLOCKED | Firebase-managed session code and logout exist, but logout, protected-data removal, and session invalidation were not exercised in a live authenticated browser during this audit. |
 | SEC-14 | PASS | All writes use authenticated Firebase SDK calls and Firestore rules; the architecture exposes no separate state-changing HTTP endpoint. |
 | SEC-15 | BLOCKED | Google Cloud API-key application/API restrictions were not evidenced from the Credentials console. |
-| SEC-16 | FAIL | A domain-restricted reCAPTCHA Enterprise provider, seven-day TTL, client integration, and Firestore monitoring mode are configured; enforcement awaits valid-domain deployment and verified metrics, and no tested quota notification exists. |
+| SEC-16 | FAIL | A domain-restricted reCAPTCHA Enterprise provider, seven-day TTL, client integration, and Firestore monitoring mode are live; enforcement awaits a representative verified-metrics window, and no tested quota notification exists. |
 | SEC-17 | PASS | Expected Firebase failures are mapped to safe localized messages; live tests found no raw exception or provider diagnostic in the UI. |
 | SEC-18 | BLOCKED | Production log viewers, configured retention, redaction policy, and a sampled-log review have not been recorded. |
-| SEC-19 | BLOCKED | OWASP ZAP 2.17.0 found no high-risk alert and one medium CSP alert; the source fix is prepared, but deployment and an official-domain rescan are still required. See [SECURITY-SCAN-2026-10-12.md](SECURITY-SCAN-2026-10-12.md). |
+| SEC-19 | PASS | OWASP ZAP 2.17.0 actively scanned the official domain after deployment and reported no high-risk or medium-risk alert. See [SECURITY-SCAN-2026-10-12.md](SECURITY-SCAN-2026-10-12.md). |
 | SEC-20 | PASS | External new-tab links use `noreferrer`; browser tests and the site-wide referrer policy verify opener protection. |
 | SEC-21 | PASS | Architecture, routes, dependencies, and [DATA-GOVERNANCE.md](DATA-GOVERNANCE.md) confirm that uploads, payments, messaging, analytics, and password authentication are absent. |
 | SEC-22 | BLOCKED | [SECURITY.md](../SECURITY.md) names an owner and response targets, but the private vulnerability-intake path has not been test-fired. |
@@ -103,7 +103,7 @@ Generated scanner and Lighthouse artifacts are kept under ignored `.tools/`; dur
 | PERF-02 | BLOCKED | All public and login-entry live checks pass, but live sign-in, logout, and authorized organiser/role workflows were not completed end to end in this audit. |
 | PERF-03 | BLOCKED | No 75th-percentile field data exists yet; lab LCP was 2.6 s, so field LCP/INP/CLS cannot be certified. |
 | PERF-04 | PASS | Lighthouse scores are 93/100/100/100, above the agreed 90 baseline. |
-| PERF-05 | PASS | Initial compressed JavaScript is about 258 kB, below the 350 kB budget. |
+| PERF-05 | PASS | Initial compressed JavaScript is about 263 kB, below the 350 kB budget. |
 | PERF-06 | PASS | Visible leader art is CSS-generated; the social image is correctly sized and no oversized-image warning appeared. |
 | PERF-07 | PASS | The primary shell renders immediately and the organiser module is a separate lazy-loaded chunk. |
 | PERF-08 | PASS | Live hashed assets use one-year immutable caching and HTML uses `no-cache`. |
