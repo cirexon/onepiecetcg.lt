@@ -1,6 +1,6 @@
 # One Piece TCG Lietuva
 
-A Lithuanian / English community website built with React, TypeScript, Vite, HeroUI, Firebase Authentication, Cloud Firestore, and **standard Firebase Hosting**. Dark navy, gold, card artwork, responsive layouts, and a matching light theme.
+A Lithuanian / English community website built with React, TypeScript, Vite, Firebase Authentication, Cloud Firestore, and **standard Firebase Hosting**. It uses an original dark navy and gold interface, CSS-generated leader visuals, responsive layouts, and a matching light theme.
 
 The application is connected to Firebase project `onepiecetcglt` and deployed at https://onepiecetcglt.web.app. A local checkout without Firebase variables uses fictional demo content. **Every demo event, venue, player, and result is fictional.** Configuring Firebase switches to your database; sample content is never silently uploaded.
 
@@ -172,6 +172,6 @@ The production dependency audit passes with zero reported vulnerabilities. The c
 
 ## GitHub and cloud environment
 
-The local checkout already points to `cirexon/onepiecetcg.lt`. Once you review the project in GitHub Desktop, commit the new files to `main` and choose **Push origin**. Do not commit `.env.local`, `node_modules`, or `dist`.
+The repository is `cirexon/onepiecetcg.lt` and the production branch is `main`. Do not commit `.env.local`, `node_modules`, or `dist`.
 
 For a separate Codex cloud environment, after the repository has code on `main`, set the installation command to `npm ci`. Use `npm run build` for validation and `npm run dev -- --host 0.0.0.0` if its preview runner requires external binding. Java 21 is needed only for emulator tests. The Cloud Environment Onboarding: Setup workflow mentioned in the pasted conversation is not exposed as a tool in this session; this file supplies its application setup commands.
