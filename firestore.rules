@@ -1,0 +1,86 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function currentRole() { return get(/databases/$(database)/documents/roles/$(request.auth.uid)).data.role; }
+    function owner() { return signedIn() && currentRole() == 'owner'; }
+    function admin() { return signedIn() && currentRole() in ['admin', 'owner']; }
+    function editor() { return signedIn() && currentRole() in ['editor', 'admin', 'owner']; }
+    function organiser() { return signedIn() && currentRole() in ['organiser', 'admin', 'owner']; }
+    function text(value, max) { return value is string && value.size() > 0 && value.size() <= max; }
+    function eventValid(d) {
+      return d.keys().hasAll(['name','date','time','city','venue','format','participants','organiserId','published'])
+        && d.keys().hasOnly(['name','date','time','city','venue','format','participants','organiserId','published'])
+        && text(d.name,120) && text(d.city,80) && text(d.venue,160)
+        && d.date is string && d.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && d.time is string && d.time.matches('^([01][0-9]|2[0-3]):[0-5][0-9]$')
+        && d.format in ['Standard','Sealed'] && d.participants is int && d.participants >= 1 && d.participants <= 128
+        && text(d.organiserId,128) && d.published is bool;
+    }
+    match /tournaments/{id} {
+      allow read: if resource.data.published == true || admin() || (organiser() && resource.data.organiserId == request.auth.uid);
+      allow create: if organiser() && eventValid(request.resource.data) && (admin() || request.resource.data.organiserId == request.auth.uid);
+      allow update: if organiser() && eventValid(request.resource.data) && request.resource.data.organiserId == resource.data.organiserId && (admin() || resource.data.organiserId == request.auth.uid);
+      allow delete: if false;
+      match /results/{playerId} {
+        function parent() { return get(/databases/$(database)/documents/tournaments/$(id)).data; }
+        function nextParent() { return getAfter(/databases/$(database)/documents/tournaments/$(id)).data; }
+        function resultValid(d) {
+          return d.keys().hasAll(['playerId','leaderId','placement','wins','losses','draws']) && d.keys().hasOnly(['playerId','leaderId','placement','wins','losses','draws'])
+            && d.playerId == playerId && text(d.playerId,128) && text(d.leaderId,32)
+            && d.placement is int && d.placement >= 1 && d.placement <= nextParent().participants
+            && d.wins is int && d.wins >= 0 && d.wins <= 128 && d.losses is int && d.losses >= 0 && d.losses <= 128 && d.draws is int && d.draws >= 0 && d.draws <= 128;
+        }
+        allow read: if parent().published == true || admin() || (organiser() && parent().organiserId == request.auth.uid);
+        allow create, update: if organiser() && (admin() || nextParent().organiserId == request.auth.uid) && resultValid(request.resource.data);
+        allow delete: if organiser() && (admin() || parent().organiserId == request.auth.uid);
+      }
+    }
+    match /players/{id} {
+      allow read: if true;
+      allow create: if (organiser() || editor()) && request.resource.data.keys().hasAll(['name','city']) && request.resource.data.keys().hasOnly(['name','city']) && text(request.resource.data.name,80) && text(request.resource.data.city,80);
+      allow update: if editor() && request.resource.data.keys().hasAll(['name','city']) && request.resource.data.keys().hasOnly(['name','city']) && text(request.resource.data.name,80) && text(request.resource.data.city,80);
+      allow delete: if false;
+    }
+    match /leaders/{id} {
+      allow read: if true;
+      allow create, update: if editor() && request.resource.data.keys().hasAll(['name','colors']) && request.resource.data.keys().hasOnly(['name','colors']) && text(request.resource.data.name,120) && request.resource.data.colors is list && request.resource.data.colors.size() >= 1 && request.resource.data.colors.size() <= 2 && request.resource.data.colors.hasOnly(['Red','Green','Blue','Purple','Black','Yellow']);
+      allow delete: if false;
+    }
+    match /news/{id} {
+      allow read: if true;
+      allow create, update: if editor() && request.resource.data.keys().hasAll(['titleLt','titleEn','bodyLt','bodyEn','date']) && request.resource.data.keys().hasOnly(['titleLt','titleEn','bodyLt','bodyEn','date']) && text(request.resource.data.titleLt,160) && text(request.resource.data.titleEn,160) && text(request.resource.data.bodyLt,5000) && text(request.resource.data.bodyEn,5000) && request.resource.data.date is string && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+      allow delete: if editor();
+    }
+    match /accounts/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || admin());
+      allow create, update: if signedIn() && request.auth.uid == uid && request.resource.data.keys().hasAll(['email','name']) && request.resource.data.keys().hasOnly(['email','name']) && request.resource.data.email == request.auth.token.email && request.resource.data.name is string && request.resource.data.name.size() <= 160;
+      allow delete: if false;
+    }
+    match /roles/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || admin());
+      function validRoleDocument() {
+        return request.resource.data.keys().hasAll(['role'])
+          && request.resource.data.keys().hasOnly(['role','grantedBy','grantedAt'])
+          && request.resource.data.role in ['viewer','organiser','editor','admin','owner']
+          && (!request.resource.data.keys().hasAny(['grantedBy','grantedAt'])
+            || (request.resource.data.keys().hasAll(['grantedBy','grantedAt'])
+              && request.resource.data.grantedBy == request.auth.uid
+              && request.resource.data.grantedAt == request.time));
+      }
+      function ownerGrantAllowed() {
+        return owner() && request.resource.data.role in ['viewer','organiser','editor','admin'];
+      }
+      function adminGrantAllowed() {
+        return currentRole() == 'admin' && request.resource.data.role in ['viewer','organiser','editor'];
+      }
+      allow create: if validRoleDocument() && (ownerGrantAllowed() || adminGrantAllowed());
+      allow update: if validRoleDocument()
+        && resource.data.role != 'owner'
+        && uid != request.auth.uid
+        && (ownerGrantAllowed() || (adminGrantAllowed() && resource.data.role != 'admin'));
+      allow delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}
