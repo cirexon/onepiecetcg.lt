@@ -6,6 +6,8 @@ test('shows the community homepage without browser errors',async({page})=>{
   await expect(page.getByRole('heading',{name:'Your adventure. Your crew. Your game.'})).toBeVisible();
   await expect(page.getByRole('heading',{name:'Upcoming tournaments'})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
+  await page.waitForTimeout(900);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
   await expect.poll(()=>page.locator('.hero-card img').evaluateAll(imgs=>imgs.every(img=>(img as HTMLImageElement).naturalWidth>0))).toBe(true);
   await expect(page.locator('.hero-card img')).toHaveCount(3);
   await expect(page.locator('.hero-visual-caption')).toHaveAttribute('href','https://en.onepiece-cardgame.com/cardlist/?series=569117');
