@@ -2,7 +2,7 @@
 
 A Lithuanian / English community website built with React, TypeScript, Vite, Firebase Authentication, Cloud Firestore, and **standard Firebase Hosting**. It uses an original dark navy and gold interface, CSS-generated leader visuals, responsive layouts, and a matching light theme.
 
-The application is connected to Firebase project `onepiecetcglt` and deployed at https://onepiecetcglt.web.app. A local checkout without Firebase variables uses fictional demo content. **Every demo event, venue, player, and result is fictional.** Configuring Firebase switches to your database; sample content is never silently uploaded.
+The application is connected to Firebase project `onepiecetcglt` and published at https://onepiecetcg.lt. Firebase's generated addresses redirect to the canonical custom domain. A local checkout without Firebase variables uses fictional demo content. **Every demo event, venue, player, and result is fictional.** Configuring Firebase switches to your database; sample content is never silently uploaded.
 
 ## Run the preview
 
@@ -62,7 +62,7 @@ These identify the browser application; they are not administrator credentials. 
 1. Firebase → **Build → Authentication → Get started**.
 2. **Sign-in method → Google → Enable**.
 3. Set the support email and save.
-4. **Settings → Authorized domains**: add `localhost` for local development (new projects may not include it), your `PROJECT_ID.web.app` domain, and later `onepiecetcg.lt` if you own it.
+4. **Settings → Authorized domains**: keep `localhost` for local development and authorize the Firebase domains plus `onepiecetcg.lt` and `www.onepiecetcg.lt`.
 
 Google users register their own accounts. They cannot edit events until you approve an organiser role. There are no passwords for you to create or distribute.
 
@@ -120,9 +120,9 @@ Role changes store the granting account and server timestamp for an audit trail.
 
 Players are separate records and do not need a Google account. Use agreed public names or nicknames; login email addresses are restricted to the account owner and administrators.
 
-### 8. Optional custom domain
+### 8. Custom domain
 
-Firebase → **Hosting → Add custom domain** → enter `onepiecetcg.lt` and follow the DNS instructions at your domain registrar. Add the domain under Authentication's authorized domains too. Firebase supports custom domains and SSL on Spark, but purchasing and renewing the `.lt` domain costs separately.
+The canonical domain is `onepiecetcg.lt`; `www.onepiecetcg.lt` redirects to it. Both are registered in Firebase Hosting and Authentication. DNS stays with Domenai.lt, while Firebase provisions and renews the Hosting certificate. Keep the Firebase ownership TXT record in DNS permanently. The exact records and verification procedure are in the [custom-domain runbook](docs/CUSTOM-DOMAIN.md).
 
 ## Keeping monthly service costs at €0
 
@@ -166,7 +166,7 @@ npm run test:rules
 
 Browser tests use locally installed Chrome. For Firestore emulator tests, install Java 21+ and make `java` available in PATH. `test:rules` uses the isolated `demo-onepiecetcg` emulator project, not your production data. Rules tests verify visitor restrictions, draft privacy, organiser isolation, role escalation protection, private emails, input bounds, and atomic 128-result saves.
 
-Run the deployed-release checks separately by setting `PLAYWRIGHT_BASE_URL=https://onepiecetcglt.web.app` for the Playwright command. These checks use the real Hosting headers and Firebase configuration without attempting a Google sign-in.
+Run the deployed-release checks separately by setting `PLAYWRIGHT_BASE_URL=https://onepiecetcg.lt` for the Playwright command. These checks use the real Hosting headers and Firebase configuration without attempting a Google sign-in.
 
 The production dependency audit passes with zero reported vulnerabilities. The current Firebase CLI still brings 11 development-only advisory findings through its upstream dependencies; these tools are not shipped in the website. A compatible gRPC override patches the Firebase SDK's older transitive dependency. Recheck `npm audit` when updating the CLI rather than forcing unrelated major transitive upgrades.
 

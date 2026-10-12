@@ -34,4 +34,4 @@ Review Firebase IAM, GitHub collaborators, Firebase Authentication users, and ap
 
 ## Domain and DNS
 
-The current canonical host is `onepiecetcglt.web.app`. If a custom domain is added, record registrar and DNS owners, enable renewal protection, add the exact domain to Firebase Authentication authorized domains, update canonical/sitemap/OG URLs and CSP, and retest TLS and redirects.
+The canonical host is `onepiecetcg.lt`, with `www.onepiecetcg.lt` redirected to the apex. Domenai.lt owns the DNS zone and Firebase Hosting serves the site and certificate. Keep the Firebase ownership TXT record, apex Hosting A record, email MX/SPF/DMARC records, registrar renewal protection, and both custom domains in Firebase Authentication. After any DNS or domain change, retest TLS, apex and `www` behavior, Firebase URL redirects, login, canonicals, sitemap, Open Graph URLs, and email delivery.

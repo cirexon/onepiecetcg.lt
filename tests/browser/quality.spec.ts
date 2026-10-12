@@ -23,7 +23,7 @@ test('updates indexable metadata and canonical URLs', async ({ page }) => {
   await expect(page).toHaveTitle(/Vilnius · Sunday locals · One Piece TCG Lietuva/);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Vilnius · Sunday locals/);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index,follow');
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/tournaments\/vilnius-sep$/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://onepiecetcg.lt/tournaments/vilnius-sep');
   await page.goto('/login');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,nofollow');
   await page.goto('/missing');
@@ -36,7 +36,7 @@ test('publishes crawl controls and protects new-tab links', async ({ page, reque
   expect(await robots.text()).toContain('Disallow: /admin');
   const sitemap = await request.get('/sitemap.xml');
   expect(sitemap.ok()).toBe(true);
-  expect(await sitemap.text()).toContain('<loc>https://onepiecetcglt.web.app/tournaments</loc>');
+  expect(await sitemap.text()).toContain('<loc>https://onepiecetcg.lt/tournaments</loc>');
   await page.goto('/community');
   const newTabLinks = page.locator('a[target="_blank"]');
   for (let index = 0; index < await newTabLinks.count(); index++) {

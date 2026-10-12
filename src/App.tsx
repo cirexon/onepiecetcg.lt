@@ -12,6 +12,7 @@ import { safeErrorMessage } from './errors';
 import type { Account, SiteData } from './types';
 
 const Admin = lazy(() => import('./Admin'));
+const publicOrigin = 'https://onepiecetcg.lt';
 
 const blank: SiteData = { tournaments:[], players:[], leaders:[], news:[] };
 const setMeta = (selector: string, attribute: string, value: string) => document.head.querySelector<HTMLMetaElement>(selector)?.setAttribute(attribute, value);
@@ -41,7 +42,7 @@ export default function App() {
     const known=Boolean(labels[path]||event||player);
     const title=event?.name||player?.name||labels[path]?.[0]||t.notFound;
     const description=event?`${event.name} · ${event.city} · ${event.date}`:player?`${player.name} · ${player.city}`:labels[path]?.[1]||t.notFound;
-    const canonical=`${window.location.origin}${path==='/'?'/':path.replace(/\/$/,'')}`;
+    const canonical=`${publicOrigin}${path==='/'?'/':path.replace(/\/$/,'')}`;
     document.title=`${title} · One Piece TCG Lietuva`;
     setMeta('meta[name="description"]','content',description);
     setMeta('meta[name="robots"]','content',known&&!['/login','/admin'].includes(path)?'index,follow':'noindex,nofollow');

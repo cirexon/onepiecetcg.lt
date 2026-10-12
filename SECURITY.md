@@ -2,7 +2,7 @@
 
 ## Supported release
 
-Only the version currently deployed to `https://onepiecetcglt.web.app` receives security fixes.
+Only the version currently deployed to `https://onepiecetcg.lt` receives security fixes.
 
 ## Private reporting
 
