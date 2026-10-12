@@ -100,10 +100,9 @@ This one-time step must be done in the Firebase console because website users ca
 4. Document ID: paste your exact UID.
 5. Add a field named `role`, type **string**, value `owner`.
 6. Save, then sign out and back into the website so your new role loads.
-7. Open **Dashboard** and click **Add starter leaders**.
-8. Add real player display names, create your first tournament, enter results, and publish.
+7. Open **Dashboard**, add real player display names, create your first tournament, enter results, and publish.
 
-The starter leaders are a small example catalog, not a claim about the current competitive meta. Additional leaders can be added in the Firestore console using the same document structure. Use the printed card code as the document ID; different versions of a character are separate leaders.
+The application includes a static catalog of 138 unique English leader card codes, names, and gameplay colors scanned from Bandai's official card list on 2026-10-12. Alternate artwork and reprints are deduplicated by printed card code. The catalog is bundled with the website, so organisers can select any included leader without first creating Firestore documents or consuming one Firestore read per leader.
 
 ### 7. Approve other accounts
 
@@ -113,7 +112,7 @@ Ask someone to sign in once using Google. Their account then appears in your Das
 | --- | --- |
 | Visitor | Browse public content; signed-in accounts remain read-only until approved |
 | Organiser | Add players and manage only their own tournaments, drafts, and results |
-| Content Editor | Add or correct players, maintain leaders, and publish news |
+| Content Editor | Add or correct players and publish news |
 | Administrator | All Organiser and Content Editor permissions, all tournaments, and routine role assignment |
 | Owner | Full access, including granting or removing Administrator access |
 
@@ -135,7 +134,7 @@ Firebase's published Spark quotas currently include Hosting storage of 10 GB and
 
 Source: https://firebase.google.com/pricing
 
-The site loads data once per session/sign-in change and after saves, rather than using live subscriptions. Queries are bounded to 100 tournaments, 1000 players, 200 leaders, and 30 news posts (admin account list: 200). This is suitable for a first local community release; add proper cursor pagination before the archive grows beyond these limits. The bounded event query is not a guarantee of the latest 100 events. No paid service is needed for adding pagination later.
+The site loads data once per session/sign-in change and after saves, rather than using live subscriptions. Queries are bounded to 100 tournaments, 1000 players, and 30 news posts (admin account list: 200). The leader catalog is bundled static data and causes no Firestore reads. This is suitable for a first local community release; add proper cursor pagination before the archive grows beyond these limits. The bounded event query is not a guarantee of the latest 100 events. No paid service is needed for adding pagination later.
 
 Firestore backups use the local `backup:firestore` command described in the [operations runbook](docs/OPERATIONS-RUNBOOK.md). It reads all collections and nested subcollections through your existing Firebase CLI login, encrypts the result with AES-256-GCM, and writes only to the ignored `.backups` directory. The passphrase is hidden while typed and is never saved in the repository. This avoids the managed Firestore export feature, which requires billing.
 
@@ -144,12 +143,13 @@ Firestore backups use the local `backup:firestore` command described in the [ope
 | Collection | Document ID | Contents |
 | --- | --- | --- |
 | `players` | generated ID | `name`, `city` |
-| `leaders` | card code | `name`, `colors` |
 | `tournaments` | generated ID | event fields, `organiserId`, `published` |
 | `tournaments/{id}/results` | player ID | player / leader IDs, placement, wins, losses, draws |
 | `accounts` | Google UID | private `email`, `name` |
 | `roles` | Google UID | `role`: `viewer`, `organiser`, `editor`, `admin`, or `owner`; optional `grantedBy` and `grantedAt` audit fields |
 | `news` | generated ID | bilingual titles / bodies and date |
+
+Leader reference data lives in `src/data/leader-catalog.json`, keyed by the printed card code. Tournament result documents store only that code in `leaderId`. The source page is https://en.onepiece-cardgame.com/cardlist/; refresh the catalog through a reviewed code change when new English releases are added.
 
 One result document per player prevents duplicate players in an event. The interface validates unique placements and existing catalog references; database rules enforce shape, value bounds, ownership, and matching player/document IDs. Trusted organisers remain responsible for the accuracy of results; referential and cross-document placement checks are performed by the app. Event and result updates are saved in one atomic batch, including removals, with up to 128 participants. If two organisers/admins edit the same event concurrently, the last save wins; refresh before editing.
 

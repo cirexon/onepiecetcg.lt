@@ -35,7 +35,11 @@ test('filters events and opens standings',async({page})=>{
   await page.getByRole('link',{name:'Matas P.'}).click();await expect(page.getByRole('heading',{name:'Matas P.'})).toBeVisible();
 });
 test('filters leaders and shows sample sizes',async({page})=>{
-  await page.goto('/leaders');await page.getByLabel('Colors',{exact:true}).selectOption('Purple');
+  await page.goto('/leaders');
+  await expect(page.locator('.leader-stat-row')).toHaveCount(138);
+  await page.getByLabel('Colors',{exact:true}).selectOption('Purple');
+  await expect(page.locator('.leader-stat-row')).toHaveCount(34);
+  await page.getByLabel('Search…',{exact:true}).fill('OP05-060');
   await expect(page.locator('.leader-stat-row')).toHaveCount(1);
   await expect(page.getByText('Top 4 rate (2/4)')).toBeVisible();
   await expect(page.getByText('25.0%')).toBeVisible();

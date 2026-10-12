@@ -1,12 +1,6 @@
-import type { SiteData, Leader } from './types';
-export const leaders: Leader[] = [
-  { id: 'OP01-001', name: 'Roronoa Zoro', colors: ['Red'] },
-  { id: 'OP05-060', name: 'Monkey.D.Luffy', colors: ['Purple'] },
-  { id: 'OP05-098', name: 'Enel', colors: ['Yellow'] },
-  { id: 'OP06-022', name: 'Yamato', colors: ['Green', 'Yellow'] },
-  { id: 'OP07-079', name: 'Rob Lucci', colors: ['Black'] },
-  { id: 'OP01-060', name: 'Donquixote Doflamingo', colors: ['Blue'] },
-];
+import type { SiteData } from './types';
+import { leaderCatalog } from './catalog';
+export const leaders = leaderCatalog;
 export const demo: SiteData = {
   leaders,
   players: [

@@ -4,6 +4,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/
 import { collection, doc, getDoc, getDocs, getFirestore, limit, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore';
 import type { Account, News, Player, SiteData, Tournament } from './types';
 import { validateTournament } from './stats';
+import { leaderCatalog } from './catalog';
 const config = { apiKey: import.meta.env.VITE_FIREBASE_API_KEY, authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN, projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID, appId: import.meta.env.VITE_FIREBASE_APP_ID };
 export const configured = Object.values(config).every(Boolean);
 const app = configured ? initializeApp(config) : null;
@@ -27,14 +28,14 @@ export async function loadRole(uid: string) { const snap = await getDoc(doc(db!,
 export async function registerAccount(uid: string, email: string, name: string) { await setDoc(doc(db!, 'accounts', uid), { email, name }); }
 export async function loadData(account: Account | null): Promise<SiteData> {
   const eventQuery = account && ['admin','owner'].includes(account.role) ? query(collection(db!, 'tournaments'), limit(100)) : query(collection(db!, 'tournaments'), where('published', '==', true), limit(100));
-  const [events, players, leaders, news] = await Promise.all([getDocs(eventQuery), getDocs(query(collection(db!, 'players'), limit(1000))), getDocs(query(collection(db!, 'leaders'), limit(200))), getDocs(query(collection(db!, 'news'), limit(30)))]);
+  const [events, players, news] = await Promise.all([getDocs(eventQuery), getDocs(query(collection(db!, 'players'), limit(1000))), getDocs(query(collection(db!, 'news'), limit(30)))]);
   const docs = new Map(events.docs.map(d => [d.id, d]));
   if (account?.role === 'organiser') { const own = await getDocs(query(collection(db!, 'tournaments'), where('organiserId', '==', account.id), limit(100))); own.docs.forEach(d => docs.set(d.id, d)); }
   const tournaments = await Promise.all([...docs.values()].map(async d => {
     const results = await getDocs(query(collection(db!, 'tournaments', d.id, 'results'), limit(128)));
     return { ...d.data(), id: d.id, results: results.docs.map(r => r.data()) } as Tournament;
   }));
-  return { tournaments, players: players.docs.map(d => ({...d.data(),id:d.id})) as Player[], leaders: leaders.docs.map(d => ({...d.data(),id:d.id})) as SiteData['leaders'], news: news.docs.map(d => ({...d.data(),id:d.id})) as News[] };
+  return { tournaments, players: players.docs.map(d => ({...d.data(),id:d.id})) as Player[], leaders: leaderCatalog, news: news.docs.map(d => ({...d.data(),id:d.id})) as News[] };
 }
 export async function saveTournament(t: Tournament, existing = false) {
   validateTournament(t);
@@ -58,4 +59,3 @@ export async function loadAccounts(): Promise<Account[]> {
   const roleMap = new Map(roles.docs.map(d=>[d.id,d.data().role]));
   return accounts.docs.map(d=>({...d.data(),id:d.id,role:roleMap.get(d.id)||'viewer'})) as Account[];
 }
-export async function saveLeaders(leaders: SiteData['leaders']) { const batch=writeBatch(db!); leaders.forEach(({id,...fields})=>batch.set(doc(db!,'leaders',id),fields)); await batch.commit(); }
