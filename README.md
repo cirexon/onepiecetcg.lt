@@ -154,7 +154,7 @@ Dates and event times use Europe/Vilnius. Historical dates are sample data. Upco
 
 ## Checks
 
-Use the mandatory [production readiness checklist](docs/PRODUCTION-READINESS-CHECKLIST.md) before every live release. It defines the security, privacy, compliance, performance, SEO, accessibility, and usability pass/fail gates and required evidence. Supporting records include the [security policy](SECURITY.md), [data inventory](docs/DATA-GOVERNANCE.md), [incident procedure](docs/INCIDENT-RESPONSE.md), [operations runbook](docs/OPERATIONS-RUNBOOK.md), and [asset register](docs/ASSET-REGISTER.md).
+Use the mandatory [production readiness checklist](docs/PRODUCTION-READINESS-CHECKLIST.md) before every live release. It defines the security, privacy, compliance, performance, SEO, accessibility, and usability pass/fail gates and required evidence. The current findings and launch decision are in the [2026-10-12 production audit](docs/PRODUCTION-AUDIT-2026-10-12.md). Supporting records include the [security policy](SECURITY.md), [data inventory](docs/DATA-GOVERNANCE.md), [incident procedure](docs/INCIDENT-RESPONSE.md), [operations runbook](docs/OPERATIONS-RUNBOOK.md), and [asset register](docs/ASSET-REGISTER.md).
 
 ```sh
 npm test
